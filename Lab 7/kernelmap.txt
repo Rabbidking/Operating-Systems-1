@@ -1,0 +1,124 @@
+
+Allocating common symbols
+Common symbol       size              file
+
+dir                 0x4               kernelc.o
+vbr                 0x200             disk.o
+
+Memory Configuration
+
+Name             Origin             Length             Attributes
+*default*        0x0000000000000000 0xffffffffffffffff
+
+Linker script and memory map
+
+                0x0000000000400000                __image_base__ = 0x400000
+                0x0000000000000000                __dll__ = 0x0
+                0x0000000000400000                ___ImageBase = 0x400000
+                0x0000000000001000                __section_alignment__ = 0x1000
+                0x0000000000000200                __file_alignment__ = 0x200
+                0x0000000000000004                __major_os_version__ = 0x4
+                0x0000000000000000                __minor_os_version__ = 0x0
+                0x0000000000000001                __major_image_version__ = 0x1
+                0x0000000000000000                __minor_image_version__ = 0x0
+                0x0000000000000004                __major_subsystem_version__ = 0x4
+                0x0000000000000000                __minor_subsystem_version__ = 0x0
+                0x0000000000000003                __subsystem__ = 0x3
+                0x0000000000200000                __size_of_stack_reserve__ = 0x200000
+                0x0000000000001000                __size_of_stack_commit__ = 0x1000
+                0x0000000000100000                __size_of_heap_reserve__ = 0x100000
+                0x0000000000001000                __size_of_heap_commit__ = 0x1000
+                0x0000000000000000                __loader_flags__ = 0x0
+                0x0000000000000000                __dll_characteristics__ = 0x0
+                0x0000000000100000                . = 0x100000
+
+.text           0x0000000000100000    0x18400
+                0x0000000000100000                _textStart = .
+ *(.text)
+ .text          0x0000000000100000       0x24 kernelasm.o
+ .text          0x0000000000100024      0x254 kernelc.o
+                0x0000000000100024                sweet
+                0x00000000001000bb                clearBss
+                0x00000000001000de                kmain
+ .text          0x0000000000100278       0xb0 util.o
+                0x0000000000100278                inb
+                0x0000000000100294                outb
+                0x00000000001002b3                kmemset
+                0x00000000001002e6                kmemcpy
+ .text          0x0000000000100328      0xc84 kprintf.o
+                0x00000000001003c8                kprintf
+                0x0000000000100415                ksprintf
+ .text          0x0000000000100fac      0x6a8 console.o
+                0x0000000000100fac                serialOut
+                0x0000000000100fe9                RGBToBytes
+                0x00000000001011cd                console_init
+                0x0000000000101208                drawCharacter
+                0x0000000000101323                setPixel
+                0x0000000000101371                clearScreen
+                0x00000000001013c7                scroll
+                0x000000000010144e                console_putc
+ .text          0x0000000000101654      0x3c4 disk.o
+                0x0000000000101654                disk_init
+                0x0000000000101671                outw
+                0x0000000000101692                inw
+                0x00000000001016af                waitForControllerReady
+                0x00000000001016c9                disk_read_sector
+                0x0000000000101813                disk_write_sector
+                0x0000000000101956                clusterNumberToSectorNumber
+                0x00000000001019b2                readCluster
+ *(.rodata*)
+ *(.rdata*)
+ .rdata         0x0000000000101a18       0x7c kernelc.o
+ .rdata$zzz     0x0000000000101a94       0x14 kernelc.o
+ .rdata$zzz     0x0000000000101aa8       0x14 util.o
+ .rdata         0x0000000000101abc      0x1c4 kprintf.o
+ .rdata$zzz     0x0000000000101c80       0x14 kprintf.o
+ *fill*         0x0000000000101c94        0xc 
+ .rdata         0x0000000000101ca0     0x2000 console.o
+ .rdata$zzz     0x0000000000103ca0       0x14 console.o
+ .rdata         0x0000000000103cb4        0x8 disk.o
+ .rdata$zzz     0x0000000000103cbc       0x14 disk.o
+                0x0000000000103cd0                _textEnd = .
+                0x0000000000104000                . = ALIGN (ABSOLUTE (.), 0x1000)
+ *fill*         0x0000000000103cd0      0x330 
+                0x0000000000104000                _dataStart = .
+ *(.data)
+ .data          0x0000000000104000     0x4000 kernelasm.o
+ .data          0x0000000000108000        0x0 kernelc.o
+ .data          0x0000000000108000        0x0 util.o
+ .data          0x0000000000108000        0x0 kprintf.o
+ .data          0x0000000000108000        0x0 console.o
+ .data          0x0000000000108000        0x0 disk.o
+                0x0000000000108000                _dataEnd = .
+                0x0000000000108000                _bssStart = .
+ *(COMMON)
+ COMMON         0x0000000000108000        0x4 kernelc.o
+                0x0000000000108000                dir
+ *fill*         0x0000000000108004       0x1c 
+ COMMON         0x0000000000108020      0x200 disk.o
+                0x0000000000108020                vbr
+ *(.bss)
+ .bss           0x0000000000108220        0x0 kernelasm.o
+ .bss           0x0000000000108220    0x10000 kernelc.o
+ .bss           0x0000000000118220        0x0 util.o
+ .bss           0x0000000000118220        0x0 kprintf.o
+ .bss           0x0000000000118220       0x2c console.o
+                0x0000000000118220                cc
+                0x0000000000118224                cr
+ .bss           0x000000000011824c        0x0 disk.o
+                0x000000000011824c                _bssEnd = .
+
+.drectve        0x0000000000119000      0x200
+ .drectve       0x0000000000119000       0x14 kernelc.o
+ .drectve       0x0000000000119014       0x14 disk.o
+
+/DISCARD/
+ *(.eh_frame)
+ *(.comment)
+LOAD kernelasm.o
+LOAD kernelc.o
+LOAD util.o
+LOAD kprintf.o
+LOAD console.o
+LOAD disk.o
+OUTPUT(kernel.tmp pei-i386)
