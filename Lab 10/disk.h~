@@ -1,0 +1,6 @@
+#pragma once
+
+void outw(unsigned short port, unsigned short value);
+unsigned short inw(unsigned short port);
+void disk_read_sector(unsigned sector, void * db);
+void disk_write_sector(unsigned sector, const void * db);
