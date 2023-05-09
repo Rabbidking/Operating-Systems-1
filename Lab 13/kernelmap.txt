@@ -1,0 +1,131 @@
+
+Allocating common symbols
+Common symbol       size              file
+
+idt                 0x180             interrupts.o
+
+Memory Configuration
+
+Name             Origin             Length             Attributes
+*default*        0x0000000000000000 0xffffffffffffffff
+
+Linker script and memory map
+
+                0x0000000000400000                __image_base__ = 0x400000
+                0x0000000000000000                __dll__ = 0x0
+                0x0000000000400000                ___ImageBase = 0x400000
+                0x0000000000001000                __section_alignment__ = 0x1000
+                0x0000000000000200                __file_alignment__ = 0x200
+                0x0000000000000004                __major_os_version__ = 0x4
+                0x0000000000000000                __minor_os_version__ = 0x0
+                0x0000000000000001                __major_image_version__ = 0x1
+                0x0000000000000000                __minor_image_version__ = 0x0
+                0x0000000000000004                __major_subsystem_version__ = 0x4
+                0x0000000000000000                __minor_subsystem_version__ = 0x0
+                0x0000000000000003                __subsystem__ = 0x3
+                0x0000000000200000                __size_of_stack_reserve__ = 0x200000
+                0x0000000000001000                __size_of_stack_commit__ = 0x1000
+                0x0000000000100000                __size_of_heap_reserve__ = 0x100000
+                0x0000000000001000                __size_of_heap_commit__ = 0x1000
+                0x0000000000000000                __loader_flags__ = 0x0
+                0x0000000000000000                __dll_characteristics__ = 0x0
+                0x0000000000100000                . = 0x100000
+
+.text           0x0000000000100000     0x8200
+                0x0000000000100000                _textStart = .
+ *(.text)
+ .text          0x0000000000100000       0x24 kernelasm.o
+ .text          0x0000000000100024       0x5c kernelc.o
+                0x0000000000100024                clearBss
+                0x0000000000100047                kmain
+ .text          0x0000000000100080       0xb0 util.o
+                0x0000000000100080                inb
+                0x000000000010009c                outb
+                0x00000000001000bb                kmemset
+                0x00000000001000ee                kmemcpy
+ .text          0x0000000000100130      0xc84 kprintf.o
+                0x00000000001001d0                kprintf
+                0x000000000010021d                ksprintf
+ .text          0x0000000000100db4      0x6a8 console.o
+                0x0000000000100db4                serialOut
+                0x0000000000100df1                RGBToBytes
+                0x0000000000100fd5                console_init
+                0x0000000000101010                drawCharacter
+                0x000000000010112b                setPixel
+                0x0000000000101179                clearScreen
+                0x00000000001011cf                scroll
+                0x0000000000101256                console_putc
+ .text          0x000000000010145c      0x588 interrupts.o
+                0x000000000010145c                unknownInterrupt
+                0x0000000000101494                unknownInterruptWithCode
+                0x00000000001014df                divide_by_zero
+                0x000000000010150d                debug_trap
+                0x000000000010153b                undefined_opcode
+                0x0000000000101569                firstPicInterrupt
+                0x000000000010159a                secondPicInterrupt
+                0x00000000001015df                timerInterrupt
+                0x0000000000101651                haltForever
+                0x0000000000101657                table
+                0x00000000001016ac                interrupt_init
+                0x00000000001019d0                getUptime
+ .text          0x00000000001019e4       0xac testsuite.o
+                0x00000000001019e4                sweet
+ *(.rodata*)
+ *(.rdata*)
+ .rdata$zzz     0x0000000000101a90       0x14 kernelc.o
+ .rdata$zzz     0x0000000000101aa4       0x14 util.o
+ .rdata         0x0000000000101ab8      0x1c4 kprintf.o
+ .rdata$zzz     0x0000000000101c7c       0x14 kprintf.o
+ *fill*         0x0000000000101c90       0x10 
+ .rdata         0x0000000000101ca0     0x2000 console.o
+ .rdata$zzz     0x0000000000103ca0       0x14 console.o
+ .rdata         0x0000000000103cb4       0x9c interrupts.o
+ .rdata$zzz     0x0000000000103d50       0x14 interrupts.o
+ .rdata         0x0000000000103d64       0x20 testsuite.o
+ .rdata$zzz     0x0000000000103d84       0x14 testsuite.o
+                0x0000000000103d98                _textEnd = .
+                0x0000000000104000                . = ALIGN (ABSOLUTE (.), 0x1000)
+ *fill*         0x0000000000103d98      0x268 
+                0x0000000000104000                _dataStart = .
+ *(.data)
+ .data          0x0000000000104000     0x4000 kernelasm.o
+ .data          0x0000000000108000        0x0 kernelc.o
+ .data          0x0000000000108000        0x0 util.o
+ .data          0x0000000000108000        0x0 kprintf.o
+ .data          0x0000000000108000        0x0 console.o
+ .data          0x0000000000108000       0x18 interrupts.o
+                0x0000000000108000                gdt
+ .data          0x0000000000108018        0x0 testsuite.o
+                0x0000000000108018                _dataEnd = .
+                0x0000000000108018                _bssStart = .
+ *(COMMON)
+ *fill*         0x0000000000108018        0x8 
+ COMMON         0x0000000000108020      0x180 interrupts.o
+                0x0000000000108020                idt
+ *(.bss)
+ .bss           0x00000000001081a0        0x0 kernelasm.o
+ .bss           0x00000000001081a0        0x0 kernelc.o
+ .bss           0x00000000001081a0        0x0 util.o
+ .bss           0x00000000001081a0        0x0 kprintf.o
+ .bss           0x00000000001081a0       0x2c console.o
+                0x00000000001081a0                cc
+                0x00000000001081a4                cr
+ .bss           0x00000000001081cc        0x4 interrupts.o
+                0x00000000001081cc                uptime
+ .bss           0x00000000001081d0        0x0 testsuite.o
+                0x00000000001081d0                _bssEnd = .
+
+.drectve        0x0000000000109000      0x200
+ .drectve       0x0000000000109000       0x14 interrupts.o
+
+/DISCARD/
+ *(.eh_frame)
+ *(.comment)
+LOAD kernelasm.o
+LOAD kernelc.o
+LOAD util.o
+LOAD kprintf.o
+LOAD console.o
+LOAD interrupts.o
+LOAD testsuite.o
+OUTPUT(kernel.tmp pei-i386)
